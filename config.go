@@ -1,14 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////
 // Porgram: config - Config handling
-// Authors: Antonio Sun (c) 2015, All rights reserved
+// Authors: Antonio Sun (c) 2015-2016, All rights reserved
 ////////////////////////////////////////////////////////////////////////////
 
-package main
+package svcfg
 
-import (
-	"io/ioutil"
-	"strings"
-)
+import "io/ioutil"
 
 import (
 	"gopkg.in/yaml.v2"
@@ -51,7 +48,7 @@ type pod struct {
 	Instance []instance
 }
 
-var config struct {
+var Config struct {
 	DbUser     string
 	DbPassword string
 	Pod        []pod
@@ -62,17 +59,12 @@ var config struct {
 ////////////////////////////////////////////////////////////////////////////
 // Function definitions
 
-func configGet() {
-	cfgStr, err := ioutil.ReadFile(rootArgv.SvConfig)
-	err = yaml.Unmarshal(cfgStr, &config)
-	check(err)
-	//fmt.Printf("] %+v\r\n", config)
-}
-
-func Basename(s string) string {
-	n := strings.LastIndexByte(s, '.')
-	if n > 0 {
-		return s[:n]
+// ConfigGet will get the servers config from the servers definition file
+// svConfig and save in the module variable Config
+func ConfigGet(svConfig string) error {
+	cfgStr, err := ioutil.ReadFile(svConfig)
+	if err != nil {
+		return err
 	}
-	return s
+	return yaml.Unmarshal(cfgStr, &Config)
 }
