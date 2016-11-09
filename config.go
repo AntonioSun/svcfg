@@ -25,17 +25,24 @@ pod:
    instance:
 
     - database: perfwhit746
+      weekadj: 5
+      basedate: 2016-06-19
+      password: s3cr3t
       dbserver: TorsvPerfDb07
       servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
 
     - database: perfwhit746b
+      weekadj: 5
+      basedate: 2016-06-19
+      password: s3cr3t
       dbserver: TorsvPerfDb07
       servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
 
 */
 
-type instance struct {
+type InstanceT struct {
 	Database string
+	WeekAdj  int
 	Dbserver string
 	Servers  string
 	BaseDate string
@@ -45,7 +52,7 @@ type instance struct {
 
 type pod struct {
 	Id       string
-	Instance []instance
+	Instance []InstanceT
 }
 
 var Config struct {
