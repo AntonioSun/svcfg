@@ -48,6 +48,7 @@ type InstanceT struct {
 	BaseDate string
 	Password string
 	Serversa []string
+	CurDFv   string
 }
 
 type pod struct {
