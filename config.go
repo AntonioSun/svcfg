@@ -48,7 +48,9 @@ type InstanceT struct {
 	BaseDate string
 	Password string
 	Serversa []string
-	CurDFv   string
+	// data ouside yaml definition, for templating at InstanceT level
+	CurDFv string // current DF ver
+	Id     string // pod Id from above level
 }
 
 type pod struct {
