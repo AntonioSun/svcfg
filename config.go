@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////
 // Porgram: config - Config handling
-// Authors: Antonio Sun (c) 2015-2016, All rights reserved
+// Authors: Antonio Sun (c) 2015-2018, All rights reserved
 ////////////////////////////////////////////////////////////////////////////
 
 package svcfg
@@ -22,19 +22,21 @@ pod:
 
  - id: v746b
 
+   # password, dbserver & servers under pod is mandatory
+   password: s3cr3ct
+   dbserver: TorsvPerfDb07
+   servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
    instance:
 
     - database: perfwhit746
       weekadj: 5
       basedate: 2016-06-19
-      password: s3cr3t
-      dbserver: TorsvPerfDb07
-      servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
 
     - database: perfwhit746b
       weekadj: 5
       basedate: 2016-06-19
-      password: s3cr3t
+      # password, dbserver & servers under instance is optional, 
+      # to overwrite the pod setting
       dbserver: TorsvPerfDb07
       servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
 
@@ -55,6 +57,9 @@ type InstanceT struct {
 
 type pod struct {
 	Id       string
+	Password string
+	Dbserver string
+	Servers  string
 	Instance []InstanceT
 }
 
