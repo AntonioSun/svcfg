@@ -81,5 +81,25 @@ func ConfigGet(svConfig string) error {
 	if err != nil {
 		return err
 	}
-	return yaml.Unmarshal(cfgStr, &Config)
+	err = yaml.Unmarshal(cfgStr, &Config)
+	if err != nil {
+		return err
+	}
+
+	// fill optional instance level setting from pod, if empty
+	for _, pods := range Config.Pod {
+		for ii, inst := range pods.Instance {
+			if len(inst.Password) == 0 {
+				pods.Instance[ii].Password = pods.Password
+			}
+			if len(inst.Dbserver) == 0 {
+				pods.Instance[ii].Dbserver = pods.Dbserver
+			}
+			if len(inst.Servers) == 0 {
+				pods.Instance[ii].Servers = pods.Servers
+			}
+		}
+	}
+
+	return nil
 }
