@@ -5,9 +5,11 @@
 
 package svcfg
 
-import "io/ioutil"
-
 import (
+       "io/ioutil"
+	"os"
+	"path/filepath"
+
 	"gopkg.in/yaml.v2"
 )
 
@@ -79,8 +81,17 @@ var Config struct {
 func ConfigGet(svConfig string) error {
 	cfgStr, err := ioutil.ReadFile(svConfig)
 	if err != nil {
-		return err
+		ex, e := os.Executable()
+		if e != nil {
+			return e
+		}
+		svConfig = filepath.Dir(ex) + string(filepath.Separator) + svConfig
+		cfgStr, err = ioutil.ReadFile(svConfig)
+		if err != nil {
+			return err
+		}
 	}
+
 	err = yaml.Unmarshal(cfgStr, &Config)
 	if err != nil {
 		return err
