@@ -6,9 +6,10 @@
 package svcfg
 
 import (
-       "io/ioutil"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -37,7 +38,7 @@ pod:
     - database: perfwhit746b
       weekadj: 5
       basedate: 2016-06-19
-      # password, dbserver & servers under instance is optional, 
+      # password, dbserver & servers under instance is optional,
       # to overwrite the pod setting
       dbserver: TorsvPerfDb07
       servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
@@ -48,10 +49,10 @@ type InstanceT struct {
 	Database string
 	WeekAdj  int
 	Dbserver string
-	Servers  string
+	Servers  string // Servers str
 	BaseDate string
 	Password string
-	Serversa []string
+	Servera  []string // Servers array
 	// data ouside yaml definition, for templating at InstanceT level
 	CurDFv string // current DF ver
 	Id     string // pod Id from above level
@@ -109,6 +110,8 @@ func ConfigGet(svConfig string) error {
 			if len(inst.Servers) == 0 {
 				pods.Instance[ii].Servers = pods.Servers
 			}
+			// expand from "Servers" to "Servera"
+			pods.Instance[ii].Servera = strings.Fields(pods.Instance[ii].Servers)
 		}
 	}
 
