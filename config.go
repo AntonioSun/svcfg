@@ -49,12 +49,12 @@ type InstanceT struct {
 	Database string
 	WeekAdj  int
 	Dbserver string
-	Servers  string // Servers str
+	Servers  string `json:"-"` // Servers str, ignored in json output
 	BaseDate string
 	Password string
 	Servera  []string // Servers array
 	// data ouside yaml definition, for templating at InstanceT level
-	CurDFv string // current DF ver
+	CurDFv string `json:"-"` // current DF ver, ignored in json output
 	Id     string // pod Id from above level
 }
 
@@ -101,6 +101,7 @@ func ConfigGet(svConfig string) error {
 	// fill optional instance level setting from pod, if empty
 	for _, pods := range Config.Pod {
 		for ii, inst := range pods.Instance {
+			pods.Instance[ii].Id = pods.Id
 			if len(inst.Password) == 0 {
 				pods.Instance[ii].Password = pods.Password
 			}
