@@ -70,6 +70,7 @@ var Config struct {
 	DbUser     string
 	DbPassword string
 	Pod        []pod
+	AppendId   bool // whether to append PodId to Instance Database name
 	ENV        map[string]string
 	Today      string
 }
@@ -102,6 +103,9 @@ func ConfigGet(svConfig string) error {
 	for _, pods := range Config.Pod {
 		for ii, inst := range pods.Instance {
 			pods.Instance[ii].Id = pods.Id
+			if Config.AppendId {
+				pods.Instance[ii].Database += pods.Id
+			}
 			if len(inst.Password) == 0 {
 				pods.Instance[ii].Password = pods.Password
 			}
