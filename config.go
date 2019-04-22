@@ -21,6 +21,11 @@ import (
 dbuser: uu
 dbpassword: "pp"
 
+# Password that can trickle down to Pod Instances
+instpw: xyz
+# whether to append PodId to Instance Database name
+#appendid: true
+
 pod:
 
  - id: v746b
@@ -34,6 +39,7 @@ pod:
     - database: perfwhit746
       weekadj: 5
       basedate: 2016-06-19
+      password: n3ws3cr3ct
 
     - database: perfwhit746b
       weekadj: 5
@@ -69,6 +75,7 @@ type pod struct {
 var Config struct {
 	DbUser     string
 	DbPassword string
+	InstPW     string // Password that can trickle down to Pod Instances
 	Pod        []pod
 	AppendId   bool // whether to append PodId to Instance Database name
 	ENV        map[string]string
@@ -100,14 +107,17 @@ func ConfigGet(svConfig string) error {
 	}
 
 	// fill optional instance level setting from pod, if empty
-	for _, pods := range Config.Pod {
+	for pp, pods := range Config.Pod {
+		if len(pods.Password) == 0 {
+			Config.Pod[pp].Password = Config.InstPW
+		}
 		for ii, inst := range pods.Instance {
 			pods.Instance[ii].Id = pods.Id
 			if Config.AppendId {
 				pods.Instance[ii].Database += pods.Id
 			}
 			if len(inst.Password) == 0 {
-				pods.Instance[ii].Password = pods.Password
+				pods.Instance[ii].Password = Config.Pod[pp].Password
 			}
 			if len(inst.Dbserver) == 0 {
 				pods.Instance[ii].Dbserver = pods.Dbserver
