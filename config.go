@@ -36,16 +36,16 @@ pod:
    servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
    instance:
 
-    - database: perfwhit746
+    - database: perfcust1
       weekadj: 5
       basedate: 2016-06-19
-      password: n3ws3cr3ct
 
-    - database: perfwhit746b
+    - database: perfwhit
       weekadj: 5
       basedate: 2016-06-19
       # password, dbserver & servers under instance is optional,
       # to overwrite the pod setting
+      password: n3ws3cr3ct
       dbserver: TorsvPerfDb07
       servers: TorsvPerfBje05 TorsvPerfBje06 TorsvPerfApp03 TorsvPerfApp06
 
@@ -60,8 +60,8 @@ type InstanceT struct {
 	Password string
 	Servera  []string // Servers array
 	// data ouside yaml definition, for templating at InstanceT level
-	CurDFv string `json:"-"` // current DF ver, ignored in json output
-	Id     string // pod Id from above level
+	CurDFv  string `json:"-"` // current DF ver, ignored in json output
+	Version string // pod Id (Version) from above level
 }
 
 type pod struct {
@@ -112,7 +112,7 @@ func ConfigGet(svConfig string) error {
 			Config.Pod[pp].Password = Config.InstPW
 		}
 		for ii, inst := range pods.Instance {
-			pods.Instance[ii].Id = pods.Id
+			pods.Instance[ii].Version = pods.Id
 			if Config.AppendId {
 				pods.Instance[ii].Database += pods.Id
 			}
@@ -130,5 +130,21 @@ func ConfigGet(svConfig string) error {
 		}
 	}
 
+	return nil
+}
+
+// GetInst will get the *Instance, given the PotID and Instance prefix
+func GetInst(pid, sid string) *InstanceT {
+	for _, pods := range Config.Pod {
+		if pods.Id != pid {
+			continue
+		}
+		for _, inst := range pods.Instance {
+			if sid != inst.Database {
+				continue
+			}
+			return &inst
+		}
+	}
 	return nil
 }
