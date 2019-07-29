@@ -72,7 +72,7 @@ type pod struct {
 	Instance []InstanceT
 }
 
-var Config struct {
+type ConfigT struct {
 	DbUser     string
 	DbPassword string
 	InstPW     string // Password that can trickle down to Pod Instances
@@ -81,6 +81,8 @@ var Config struct {
 	ENV        map[string]string
 	Today      string
 }
+
+var Config ConfigT
 
 ////////////////////////////////////////////////////////////////////////////
 // Function definitions
