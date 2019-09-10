@@ -6,7 +6,6 @@
 package svcfg
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -140,24 +139,25 @@ func ConfigGet(svConfig string) error {
 
 // GetInst will get the *Instance, given the PotID and Instance prefix
 func GetInst(pid, sid string) *InstanceT {
-	var ret *InstanceT = nil
+	ret := InstanceT{}
 	for _, pods := range Config.Pod {
 		if pods.Id != pid {
 			continue
 		}
 		for _, inst := range pods.Instance {
 			if inst.Database == "default" {
-				ret = &inst
-				fmt.Printf("D] %+v\n", ret)
+				ret = inst
+				// fmt.Printf("D] %+v\n", ret)
 			}
 			if sid != inst.Database {
 				continue
 			}
-			ret = &inst
-			fmt.Printf("F] %+v\n", ret)
-			return ret
+			ret = inst
+			// fmt.Printf("F] %+v\n", ret)
+			return &ret
 		}
 	}
-	fmt.Printf("R] %+v\n", ret)
-	return ret
+	// fmt.Printf("R] %+v\n", ret)
+	// https://play.golang.org/p/f3-9v0wK4JD
+	return &ret
 }
