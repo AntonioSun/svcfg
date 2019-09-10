@@ -6,6 +6,7 @@
 package svcfg
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -59,6 +60,7 @@ type InstanceT struct {
 	BaseDate string
 	Password string
 	Servera  []string // Servers array
+	Servern  []string // Servers array name mapping
 	// data ouside yaml definition, for templating at InstanceT level
 	CurDFv  string `json:"-"` // current DF ver, ignored in json output
 	Version string // pod Id (Version) from above level
@@ -83,6 +85,7 @@ type ConfigT struct {
 }
 
 var Config ConfigT
+var ServerMap = []string{"BJE1", "BJE2", "APP1", "APP2"}
 
 ////////////////////////////////////////////////////////////////////////////
 // Function definitions
@@ -137,16 +140,24 @@ func ConfigGet(svConfig string) error {
 
 // GetInst will get the *Instance, given the PotID and Instance prefix
 func GetInst(pid, sid string) *InstanceT {
+	var ret *InstanceT = nil
 	for _, pods := range Config.Pod {
 		if pods.Id != pid {
 			continue
 		}
 		for _, inst := range pods.Instance {
+			if inst.Database == "default" {
+				ret = &inst
+				fmt.Printf("D] %+v\n", ret)
+			}
 			if sid != inst.Database {
 				continue
 			}
-			return &inst
+			ret = &inst
+			fmt.Printf("F] %+v\n", ret)
+			return ret
 		}
 	}
-	return nil
+	fmt.Printf("R] %+v\n", ret)
+	return ret
 }
