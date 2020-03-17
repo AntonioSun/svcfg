@@ -149,14 +149,19 @@ func GetInst(pid, sid string) *InstanceT {
 				ret = inst
 				// fmt.Printf("D] %+v\n", ret)
 			}
+			// populate ret's server settings, in case nothing found
+			ret = inst
 			if sid != inst.Database {
 				continue
 			}
-			ret = inst
 			// fmt.Printf("F] %+v\n", ret)
 			return &ret
 		}
 	}
+	// not found, clear critical fields
+	ret.Version = ""
+	ret.Dbserver = ""
+	ret.Database = ""
 	// fmt.Printf("R] %+v\n", ret)
 	// https://play.golang.org/p/f3-9v0wK4JD
 	return &ret
