@@ -110,6 +110,12 @@ func ConfigGet(svConfig string) error {
 		return err
 	}
 
+	return ConfigRegrow()
+}
+
+// ConfigRegrow will regrow the servers config (saved in var Config)
+// if/when new nodes are added to the config dynamically
+func ConfigRegrow() error {
 	// fill optional instance level setting from pod, if empty
 	for pp, pods := range Config.Pod {
 		if len(pods.Password) == 0 {
@@ -133,7 +139,6 @@ func ConfigGet(svConfig string) error {
 			pods.Instance[ii].Servera = strings.Fields(pods.Instance[ii].Servers)
 		}
 	}
-
 	return nil
 }
 
